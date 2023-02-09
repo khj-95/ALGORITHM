@@ -11,44 +11,29 @@ public class FIleOrder {
 			solution(new String[] {"F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunderbolt II", "F-14 Tomcat"})));
 		System.out.println(Arrays.toString(
 			solution(new String[] {"muzi1.txt", "MUZI1.txt", "muzi001.txt", "muzi1.TXT"})));
-
-		System.out.println(Integer.parseInt("010"));
-		System.out.println(Integer.parseInt("10"));
-		System.out.println(Integer.parseInt("0"));
+		System.out.println(Arrays.toString(
+			solution(new String[] {"MUZI01", "muzi1"})));
 	}
 
 	public static String[] solution(String[] files) {
 		String[] answer = Arrays.stream(files).sorted(new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
-				String head1 = findHead(o1);
-				String head2 = findHead(o2);
-				if (head1.compareToIgnoreCase(head2) == 0) {
-					Integer number1 = findNumber(o1);
-					Integer number2 = findNumber(o2);
-					if (number1 == number2) {
-						return 1;
-					}
-					return number1 - number2;
+				String[] headNumberTail1 = findHeadNumberTail(o1);
+				String[] headNumberTail2 = findHeadNumberTail(o2);
+				if (headNumberTail1[0].compareToIgnoreCase(headNumberTail2[0]) == 0) {
+					return Integer.parseInt(headNumberTail1[1]) - Integer.parseInt(headNumberTail2[1]);
 				}
 
-				return head1.compareToIgnoreCase(head2);
+				return headNumberTail1[0].compareToIgnoreCase(headNumberTail2[0]);
 			}
 
-			private String findHead(String str) {
-				for (int i = 0; i < str.length(); i++) {
-					if ('0' <= str.charAt(i) && str.charAt(i) <= '9') {
-						return str.substring(0, i);
-					}
-				}
-				return str;
-			}
-
-			private Integer findNumber(String str) {
-				int start = -1;
+			private String[] findHeadNumberTail(String str) {
+				String[] headNumberTail = new String[3];
+				int start = 0;
 				int last = str.length();
 				for (int i = 0; i < str.length(); i++) {
-					if (start == -1) {
+					if (start == 0) {
 						if ('0' <= str.charAt(i) && str.charAt(i) <= '9') {
 							start = i;
 						}
@@ -59,7 +44,12 @@ public class FIleOrder {
 						}
 					}
 				}
-				return Integer.parseInt(str.substring(start, last));
+
+				headNumberTail[0] = str.substring(0, start);
+				headNumberTail[1] = str.substring(start,last);
+				headNumberTail[2] = str.substring(last);
+
+				return headNumberTail;
 			}
 		}).toArray(String[]::new);
 
